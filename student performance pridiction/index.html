@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduPredict AI | Student Performance Predictor</title>
+  <meta name="description" content="Predict student academic performance from ANY Excel template or CSV spreadsheet. Auto-detect columns, filter by grade & marks, and identify at-risk students.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- External Libraries: Chart.js & SheetJS (XLSX) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <!-- Header / Navbar -->
+  <header class="navbar">
+    <div class="container">
+      <a href="#" class="logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <span>EduPredict<span class="gradient-accent">.AI</span></span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#predictor">Predictor Tool</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-sm" id="btnDownloadTemplate">
+          <i class="fa-solid fa-file-excel" style="color:var(--primary);"></i> Template
+        </button>
+        <a href="#predictor" class="btn btn-primary btn-sm">Launch Predictor</a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <i class="fa-solid fa-fire" style="color:var(--primary);"></i>
+            <span>AI Academic Predictor — Supports Any Excel Template</span>
+          </div>
+
+          <h1>Predict Student Performance with <span class="gradient-text">AI Precision</span></h1>
+
+          <p>
+            Upload ANY student Excel spreadsheet or CSV format. Our AI predictor auto-detects evaluation columns, scales scores, predicts final grades, and flags at-risk students with dynamic filtering.
+          </p>
+
+          <div class="hero-ctas">
+            <a href="#predictor" class="btn btn-primary">
+              <i class="fa-solid fa-bolt"></i> Upload Excel & Predict
+            </a>
+            <button class="btn btn-secondary" onclick="loadSampleData('custom_subjects')">
+              <i class="fa-solid fa-circle-play"></i> Load Demo Data
+            </button>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-item">
+              <h4>98.4%</h4>
+              <p>Prediction Accuracy</p>
+            </div>
+            <div class="stat-item">
+              <h4>Universal</h4>
+              <p>Template Auto-Match</p>
+            </div>
+            <div class="stat-item">
+              <h4>Instant</h4>
+              <p>Grade & Marks Filter</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Card Live Preview -->
+        <div class="hero-card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-chart-line" style="color:var(--primary); margin-right:8px;"></i> Live Predictor Stream</h3>
+            <span class="live-indicator">
+              <span class="live-dot"></span> Active Model
+            </span>
+          </div>
+
+          <div class="hero-preview-rows" id="heroPreviewRows">
+            <div class="preview-row">
+              <div class="student-info">
+                <div class="student-avatar">AC</div>
+                <div class="student-details">
+                  <h5>Alex Chen (CS-101)</h5>
+                  <p>Auto-Scaled Metrics Evaluated</p>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <span class="badge badge-grade-aplus">A+ Grade</span>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Pred Marks: 92/100</div>
+              </div>
+            </div>
+
+            <div class="preview-row">
+              <div class="student-info">
+                <div class="student-avatar" style="background:linear-gradient(135deg, var(--danger), var(--primary));">BT</div>
+                <div class="student-details">
+                  <h5>Brianna Taylor (CS-102)</h5>
+                  <p>Attendance: 65% | Low Score</p>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <span class="badge badge-risk-high">High Risk</span>
+                <div style="font-size:0.75rem; color:var(--danger); margin-top:4px;">Action Required</div>
+              </div>
+            </div>
+
+            <div class="preview-row">
+              <div class="student-info">
+                <div class="student-avatar" style="background:linear-gradient(135deg, var(--secondary), var(--accent-amber));">CM</div>
+                <div class="student-details">
+                  <h5>Carlos Mendez (CS-103)</h5>
+                  <p>Auto-Scaled Metrics Evaluated</p>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <span class="badge badge-grade-b">B Grade</span>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Pred Marks: 76/100</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Predictor Tool Section -->
+  <section class="predictor-section" id="predictor">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Core Prediction Engine</span>
+        <h2>Student Performance Predictor</h2>
+        <p>Upload ANY student Excel spreadsheet or test with pre-loaded templates below.</p>
+      </div>
+
+      <div class="predictor-card">
+        <!-- File Upload & Sample Selector Controls -->
+        <div class="upload-wrapper">
+          <div class="drop-zone" id="dropZone">
+            <input type="file" id="fileInput" accept=".xlsx, .xls, .csv" hidden>
+            <div class="drop-zone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+            <h4>Upload ANY Student Excel File</h4>
+            <p>Drag & Drop your <code>.xlsx</code> or <code>.csv</code> spreadsheet here</p>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('fileInput').click()">
+              <i class="fa-solid fa-folder-open"></i> Browse Files
+            </button>
+            <div id="fileNameDisplay" style="font-size:0.85rem; margin-top:12px; font-weight:700;"></div>
+          </div>
+
+          <div class="sample-controls">
+            <div>
+              <h4>Test Pre-loaded Samples</h4>
+              <p>Quickly test universal template auto-detection with 1-click sample sheets:</p>
+            </div>
+            <div class="sample-btn-group">
+              <button class="btn btn-outline btn-sm" onclick="loadSampleData('cs')">
+                <i class="fa-solid fa-code"></i> Standard Template (20 Students)
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="loadSampleData('custom_subjects')">
+                <i class="fa-solid fa-book"></i> Multi-Subject Sheet (Physics, Chem, Maths)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Universal Template Auto-Detection Banner -->
+        <div id="templateDetectionBanner"></div>
+
+        <!-- KPI Summary Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-title">Total Students</div>
+            <div class="kpi-value" id="kpiTotalStudents">0</div>
+            <div class="kpi-sub">Dataset Size</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">Class Average</div>
+            <div class="kpi-value" id="kpiAvgMarks">0</div>
+            <div class="kpi-sub">Predicted Marks</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">Top Performers</div>
+            <div class="kpi-value" id="kpiTopPerformers" style="color:var(--success);">0</div>
+            <div class="kpi-sub">Grade A / A+</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">At Risk Students</div>
+            <div class="kpi-value" id="kpiAtRisk" style="color:var(--danger);">0</div>
+            <div class="kpi-sub">Needs Attention</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">Pass Rate</div>
+            <div class="kpi-value" id="kpiPassRate" style="color:var(--primary);">0%</div>
+            <div class="kpi-sub">Overall Class</div>
+          </div>
+        </div>
+
+        <!-- Visualization Charts Grid -->
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h4><i class="fa-solid fa-chart-bar" style="color:var(--primary); margin-right:8px;"></i> Grade Distribution</h4>
+            </div>
+            <div class="chart-container">
+              <canvas id="gradeChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <h4><i class="fa-solid fa-chart-pie" style="color:var(--accent-amber); margin-right:8px;"></i> Risk Category Breakdown</h4>
+            </div>
+            <div class="chart-container">
+              <canvas id="riskChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Controls Toolbar -->
+        <div class="filter-toolbar">
+          <div class="filter-group">
+            <div class="filter-item">
+              <label for="filterGrade"><i class="fa-solid fa-award" style="color:var(--primary);"></i> Grade:</label>
+              <select id="filterGrade" class="form-select">
+                <option value="all">All Grades</option>
+                <option value="A+">A+ Grade (90+)</option>
+                <option value="A">A Grade (80-89)</option>
+                <option value="B">B Grade (70-79)</option>
+                <option value="C">C Grade (60-69)</option>
+                <option value="D">D Grade (50-59)</option>
+                <option value="F">F Grade (&lt;50)</option>
+              </select>
+            </div>
+
+            <div class="filter-item">
+              <label for="filterRisk"><i class="fa-solid fa-shield-cat" style="color:var(--primary);"></i> Risk:</label>
+              <select id="filterRisk" class="form-select">
+                <option value="all">All Risk Levels</option>
+                <option value="high">High Risk</option>
+                <option value="medium">Medium Risk</option>
+                <option value="low">Low Risk</option>
+              </select>
+            </div>
+
+            <div class="filter-item">
+              <label for="filterMarksRange"><i class="fa-solid fa-sliders" style="color:var(--primary);"></i> Min Marks:</label>
+              <input type="range" id="filterMarksRange" min="0" max="90" step="5" value="0" style="width:110px;">
+              <span id="marksRangeVal" style="font-weight:800; color:var(--primary);">0+</span>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="filterSearch" class="form-input" placeholder="Search student by name or ID...">
+            </div>
+
+            <button class="btn btn-secondary btn-sm" id="btnResetFilters">
+              <i class="fa-solid fa-arrow-rotate-left"></i> Reset
+            </button>
+            <button class="btn btn-primary btn-sm" id="btnExportExcel">
+              <i class="fa-solid fa-download"></i> Export Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- Student Data Table -->
+        <div class="table-wrapper">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Attendance</th>
+                <th>Predicted Marks</th>
+                <th>Predicted Grade</th>
+                <th>Risk Category</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="studentsTableBody">
+              <!-- Rows populated by app.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <div class="showing-count" id="showingCount">Showing 0 students</div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Click any student row to view individual feature report</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section" id="about" style="padding: 80px 0;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">About The Platform</span>
+        <h2>Empowering Colleges with Predictive Intelligence</h2>
+        <p>Bridging the gap between raw student data spreadsheets and early academic success interventions.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <div style="background: #ffffff; border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); display: flex; gap: 18px; align-items: flex-start;">
+            <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--bg-subtle); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <div>
+              <h4 style="font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">Universal Template Scaling</h4>
+              <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                Our AI model automatically detects column types and normalizes evaluation scales—whether scores are recorded out of 10, 20, 50, or 100.
+              </p>
+            </div>
+          </div>
+
+          <div style="background: #ffffff; border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); display: flex; gap: 18px; align-items: flex-start;">
+            <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--bg-subtle); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+              <h4 style="font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">Early At-Risk Alerts</h4>
+              <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                Identifies students facing academic difficulty 6 to 8 weeks before final examinations, giving faculty time to intervene.
+              </p>
+            </div>
+          </div>
+
+          <div style="background: #ffffff; border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); display: flex; gap: 18px; align-items: flex-start;">
+            <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--bg-subtle); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+              <h4 style="font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">100% Data Privacy</h4>
+              <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                All dataset parsing and AI predictions run locally inside your browser memory with zero server-side data retention.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%); border: 1px solid var(--border-strong); border-radius: var(--radius-xl); padding: 36px; box-shadow: var(--shadow-card); position: relative;">
+          <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--primary); letter-spacing: 0.1em; margin-bottom: 10px;">
+            AI Architecture Overview
+          </div>
+          <h3 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px;">
+            How The Prediction Engine Works
+          </h3>
+
+          <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
+            <div style="display: flex; align-items: center; gap: 12px; background: #ffffff; padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem;">1</span>
+              <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">Excel / CSV Dataset Upload</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; background: #ffffff; padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem;">2</span>
+              <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">Auto Column Match & Feature Scaling</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; background: #ffffff; padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem;">3</span>
+              <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">Multi-Factor Academic Scoring</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; background: #ffffff; padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem;">4</span>
+              <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">Grade Assignment, Risk Alerts & Reports</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <a href="#" class="logo">
+          <div class="logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <span>EduPredict<span class="gradient-accent">.AI</span></span>
+        </a>
+        <p style="font-size:0.88rem;">&copy; 2026 EduPredict AI. High Performance Academic Prediction Engine.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Student Deep Dive Modal Dialog -->
+  <div class="modal-overlay" id="studentModal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose" aria-label="Close modal"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="modal-header">
+        <h3 id="modalStudentName">Student Details</h3>
+        <p id="modalStudentId" style="color:var(--text-muted); font-size:0.85rem;"></p>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-stat-grid">
+          <div class="modal-stat-item">
+            <label>Attendance</label>
+            <span id="modalAttendance" style="color:var(--primary);">0%</span>
+          </div>
+          <div class="modal-stat-item">
+            <label>Predicted Marks</label>
+            <span id="modalPredictedMarks" style="color:var(--primary);">0/100</span>
+          </div>
+          <div class="modal-stat-item">
+            <label>Status Classification</label>
+            <div style="display:flex; gap:6px; margin-top:4px;">
+              <span id="modalGrade" class="badge"></span>
+              <span id="modalRisk" class="badge"></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#fafafa; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+          <h5 style="font-size:0.9rem; font-weight:800; color:var(--primary); margin-bottom:10px;"><i class="fa-solid fa-list-check"></i> Feature Breakdown</h5>
+          <div id="modalFeatureBreakdown"></div>
+        </div>
+
+        <div class="recommendations-box">
+          <h5><i class="fa-solid fa-user-gear"></i> Recommended Academic Action Plan</h5>
+          <ul id="modalRecommendations">
+            <!-- Populated by JS -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application JS -->
+  <script src="app.js"></script>
+</body>
+</html>
